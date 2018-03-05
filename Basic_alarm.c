@@ -24,12 +24,11 @@ SemaphoreHandle_t hr_semaphore;
 void sg_task (void *arg)
 {
 	uint8_t sg_count = 0;
-	const TickType_t xPeriod = 1000;
+	const TickType_t xPeriod = 10;
 	TickType_t xLastWakeTime = xTaskGetTickCount();
 	for(;;)
 	{
 		vTaskDelayUntil(&xLastWakeTime,xPeriod);
-		xSemaphoreTake(mn_semaphore,TIME_DELAY);
 		sg_count++;
 		if(MAX_SECONDS == sg_count)
 		{
@@ -51,7 +50,6 @@ void mn_task (void *arg)
 			mn_count = TIME_BASE_VALUE;
 			xSemaphoreGive(hr_semaphore);
 		}
-		xSemaphoreGive(mn_semaphore);
 	}
 }
 
@@ -65,7 +63,6 @@ void hr_task (void *arg)
 		if(MAX_HOURS == hr_count){
 			hr_count = TIME_BASE_VALUE;
 		}
-		xSemaphoreGive(hr_semaphore);
 	}
 }
 
@@ -90,3 +87,4 @@ int main(void)
 	}
 	return 0;
 }
+
